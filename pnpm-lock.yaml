@@ -570,6 +570,12 @@ importers:
       webpack: 5.76.2
       wellknown: 0.5.0
 
+  directus:
+    specifiers:
+      '@directus/api': workspace:9.23.3
+    dependencies:
+      '@directus/api': link:../api
+
   packages/create-directus-extension:
     specifiers:
       '@directus/extensions-sdk': workspace:*

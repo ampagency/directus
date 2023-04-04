@@ -59,18 +59,13 @@ export async function apply(snapshotPath: string, options?: { yes: boolean; dryR
 				message += chalk.black.underline.bold('Collections:');
 
 				for (const { collection, diff } of snapshotDiff.collections) {
-					if (diff[0]?.kind === 'E' || isNestedMetaUpdate(diff[0])) {
+					if (diff[0]?.kind === 'E') {
 						message += `\n  - ${chalk.blue('Update')} ${collection}`;
 
 						for (const change of diff) {
-							const path = change.path!.slice(1).join('.');
 							if (change.kind === 'E') {
+								const path = change.path!.slice(1).join('.');
 								message += `\n    - Set ${path} to ${change.rhs}`;
-							} else if (change.kind === 'D') {
-								message += `\n    - Remove ${path}`;
-							} else if (change.kind === 'N') {
-								message += `\n    - Add ${path} and set it to ${change.rhs}`;
-							}
 						}
 					} else if (diff[0]?.kind === 'D') {
 						message += `\n  - ${chalk.red('Delete')} ${collection}`;
@@ -86,14 +81,17 @@ export async function apply(snapshotPath: string, options?: { yes: boolean; dryR
 				message += '\n\n' + chalk.black.underline.bold('Fields:');
 
 				for (const { collection, field, diff } of snapshotDiff.fields) {
-					if (diff[0]?.kind === 'E') {
+					if (diff[0]?.kind === 'E' || isNestedMetaUpdate(diff[0])) {
 						message += `\n  - ${chalk.blue('Update')} ${collection}.${field}`;
 
 						for (const change of diff) {
+							const path = change.path!.slice(1).join('.');
 							if (change.kind === 'E') {
-								const path = change.path!.slice(1).join('.');
 								message += `\n    - Set ${path} to ${change.rhs}`;
-							}
+							} else if (change.kind === 'D') {
+								message += `\n    - Remove ${path}`;
+							} else if (change.kind === 'N') {
+								message += `\n    - Add ${path} and set it to ${change.rhs}`;
 						}
 					} else if (diff[0]?.kind === 'D') {
 						message += `\n  - ${chalk.red('Delete')} ${collection}.${field}`;

@@ -66,6 +66,7 @@ export async function apply(snapshotPath: string, options?: { yes: boolean; dryR
 							if (change.kind === 'E') {
 								const path = change.path!.slice(1).join('.');
 								message += `\n    - Set ${path} to ${change.rhs}`;
+							}
 						}
 					} else if (diff[0]?.kind === 'D') {
 						message += `\n  - ${chalk.red('Delete')} ${collection}`;
@@ -92,6 +93,7 @@ export async function apply(snapshotPath: string, options?: { yes: boolean; dryR
 								message += `\n    - Remove ${path}`;
 							} else if (change.kind === 'N') {
 								message += `\n    - Add ${path} and set it to ${change.rhs}`;
+							}
 						}
 					} else if (diff[0]?.kind === 'D') {
 						message += `\n  - ${chalk.red('Delete')} ${collection}.${field}`;
